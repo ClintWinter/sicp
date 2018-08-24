@@ -3,9 +3,9 @@
 This book uses the programming language **LISP (LISt Processing)** and, more specifically, a dialect of LISP called **Scheme**.
 
 **Helpful Links:**
-* <a href="http://www.gnu.org/software/mit-scheme/documentation/mit-scheme-user/Unix-Installation.html#Unix-Installation">Installation Instructions</a>
-* <a href="http://www.gnu.org/software/mit-scheme">Download page</a>
-* <a href="http://www.gnu.org/software/mit-scheme/documentation/mit-scheme-user/index.html">Using Scheme Guide</a>
+* <a href="http://www.gnu.org/software/mit-scheme/documentation/mit-scheme-user/Unix-Installation.html#Unix-Installation" target="_blank">Installation Instructions</a>
+* <a href="http://www.gnu.org/software/mit-scheme" target="_blank">Download page</a>
+* <a href="http://www.gnu.org/software/mit-scheme/documentation/mit-scheme-user/index.html" target="_blank">Using Scheme Guide</a>
 
 To use the scheme CLI, run `$ mit-scheme`, and to exit use `^` (ctrl) + `D`.
 
@@ -249,10 +249,101 @@ Compound procedures are used in exactly the same way as primitive procedures. In
 
 ### 1.1.5 The Substitution Model for Procedure Application
 
+To evaluate a combinatino whose operator names a compound procedure, the interpreter evaluates the elements of the combination and applies the procedure (which is the value of the operator of the combination) to the arguments (which are the values of the operands of the combination).
 
+To apply a compound procedure to arguments, evaluate the body of the procedure with each formal parameter replaced by the corresponding argument.
+
+Let's evaluate the combination
+
+``` scheme
+(f 5)
+```
+
+We begin by retrieving the body of `f`:
+
+``` scheme
+(sum-of-squares (+ a 1) (* a 2))
+```
+
+Then we replace the formal parameter `a` by the argument `5`:
+
+``` scheme
+(sum-of-squares (+ 5 1) (* 5 2))
+```
+
+Evaluating this combination involves 3 sub-problems. 
+
+* Evaluating the operator to get the procedure.
+* Evaluating the 2 operands to get the arguments.
+
+`(+ 5 1)` produces `6` and `(*5 2)` produces `10`, so we must apply the `sum-of-squares` procedure to `6` and `10`. These values are substituted for the formal parameters `x` and `y`.
+
+``` scheme
+(+ (square 6) (square 10))
+```
+
+Using the definition of square, it reduces to:
+
+``` scheme
+(+ (* 6 6) (* 10 10))
+```
+
+Which reduces by multiplication to:
+
+``` scheme
+(+ 36 100)
+```
+
+and finally to:
+
+``` scheme
+136
+```
+
+The process we just described is called the **substitution model** for procedure application. There are two points that should be stressed:
+
+* The purpose of the substitution is to help us think about procedure application, not to show how the interpreter really works. Typical interpreters do not evaluate procedre applications by manipulating text of a procedure to substitute values for the formal parameters. In practice, the "substitution" is accomplished using a local environment.
+* Over the course of this book, we will present a sequnce of increasingly elaborate models of how interpreters work. The substitution model is only the first of these models. As we look closer and in greater detail, these simpler models break down and we must replace them with more complicated ones.
+
+#### Applicative order versus normal order
+
+This is not the only way to perform evaluation. An alternative evaluation model would not evaluate the operands until their values were needed. Instead it would first sbustitute operand expressions for parameters until it obtained an expression involving only primitive operators, and would then perform the evaluation. The evaluation of
+
+``` scheme
+(f 5)
+```
+
+would proceed according to the sequence of expansions
+
+``` scheme
+(sum-of-squares (+ 5 1) (* 5 2))
+
+(+ (square (+ 5 1)) (square (* 5 2)) )
+
+(+ (* (+ 5 1) (+ 5 1)) (* (* 5 2) (* 5 2)) )
+```
+
+followed by the reductions
+
+``` scheme
+(+ (* 6 6) (* 10 10) )
+
+(+ 36 100 )
+
+136
+```
+
+This alternative "fully expand and then reduce" evaluation method is known as **normal-order evaluation**, in contrast to the "evaluate the arguments and then apply" method that the interpreter actually uses, which is called **applicative-order evaluation**.
+
+It can be shown that, for procedure applications that can be modeled using substitution and that yield legitimate values, normal-rder and applicative-order evaluation produce the same value. (See exercise 1.5 for an instance of an "illegitimate" value where normal-order and applicative-order evaluation do not give the same result.)
+
+List uses applicative-order evaluation, partly because of the additional efficiency obtained from avoiding multiple evaluations of expressions such as those illustrated in the previous example, but more significantly because normal-order evaluation becomes more complicated to deal with when we leave the realm of procedures that can be modeled by substitution.
 
 
 ### 1.1.6 Conditional Expressions and Predicates
+
+
+
 
 ### 1.1.7 Example: Square Roots by Newton's Method
 
