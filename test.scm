@@ -1,4 +1,7 @@
-(define (something lst)
-    (if (null? 1st)
-        0
-        (+ 1 (list-length (cdr first)))))
+(define (square x) (* x x))
+
+(define (sum-of-squares x y)
+    (+ (square x) (square y)))
+
+(define (f a) 
+    (sum-of-squares (+ a 1) (* a 2)))
