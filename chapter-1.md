@@ -3,9 +3,9 @@
 This book uses the programming language **LISP (LISt Processing)** and, more specifically, a dialect of LISP called **Scheme**.
 
 **Helpful Links:**
-* [http://www.gnu.org/software/mit-scheme/documentation/mit-scheme-user/Unix-Installation.html#Unix-Installation](Installation Instructions)
-* [http://www.gnu.org/software/mit-scheme/](Download page)
-* [http://www.gnu.org/software/mit-scheme/documentation/mit-scheme-user/index.html](Using Scheme Guide)
+* <a href="http://www.gnu.org/software/mit-scheme/documentation/mit-scheme-user/Unix-Installation.html#Unix-Installation">Installation Instructions</a>
+* <a href="http://www.gnu.org/software/mit-scheme">Download page</a>
+* <a href="http://www.gnu.org/software/mit-scheme/documentation/mit-scheme-user/index.html">Using Scheme Guide</a>
 
 To use the scheme CLI, run `$ mit-scheme`, and to exit use `^` (ctrl) + `D`.
 
@@ -158,7 +158,7 @@ The evaluation rules are **recursive** in nature because in order to accomplish 
 
 Evaluating the above requires the evaluation rule be applied to four different combniations. We can view this process by representing the combination in the form of a tree in Figure 1.1. Each combination is represented by a node with branches corresponding to the operator and the operands of the combination stemming from it. 
 
-![Figure 1.1:  Tree representation, showing the value of each subcombination.](images/figure1-1.gif?raw=true "Figure 1.1")
+<img src="images/figure1-1.gif?raw=true" alt="Figure 1.1:  Tree representation, showing the value of each subcombination." style="margin: 0 auto;">
 
 Viewing evaluation in terms of the tree, we can imagine that the values of the operands percolate upward, starting from the terminal nodes (nodes with no branches) and then combining at higher and higher levels.
 
@@ -195,7 +195,7 @@ Let's try to express the idea of "squaring". "To square something, multiply it b
 
 We can understand this in the following way:
 
-![1.1.4](images/figure1-1.gif?raw=true "Square")
+![1.1.4](images/square-1.1.4.gif?raw=true "Square")
 
 We have here a **compound procedure**, which has been given he name `square`. Basically, it's a function in most other languages. It's general form looks like this:
 
@@ -218,10 +218,39 @@ Having defined `square`, we can now use it:
 ; 81
 ```
 
+We can also use square as a building block in defining other procedues. For example, `x^2 + y^2` can be expressed as
 
+``` scheme
+(+ (square x) (square y))
+```
+
+We can define a procedure `sum-of-square` that, given any two numbers as arguments, produces the sum of their squares:
+
+``` scheme
+(define (sum-of-square x y)
+    (+ (square x) (square y)))
+
+(sum-of-square 3 4)
+; 25
+```
+
+Now we can use `sum-of-squares` as a building block in constructing further procedures:
+
+``` scheme
+(define (f a)
+    (sum-of-squares (+ a 1) (* a 2)))
+
+(f 5)
+; 136
+```
+
+Compound procedures are used in exactly the same way as primitive procedures. Indeed, one could not tell by looking at the definition of `sum-of-squares` given above whether `square` was built into the interpreter, like `+` and `*`, or defined as a compound procedure.
 
 
 ### 1.1.5 The Substitution Model for Procedure Application
+
+
+
 
 ### 1.1.6 Conditional Expressions and Predicates
 
